@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Google Drive URL Converter</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4f8;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    padding: 40px 10px;
+  }
+  .container {
+    background: #fff;
+    padding: 30px 40px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+  }
+  h2 {
+    margin-bottom: 12px;
+    color: #0073e6;
+    text-align: center;
+  }
+  input[type="text"] {
+    width: 93%;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  input[type="text"]:focus {
+    border-color: #0073e6;
+  }
+  button.convert-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background: #0073e6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button.convert-btn:hover {
+    background: #005bb5;
+  }
+  .output-section {
+    margin-top: 25px;
+    text-align: center;
+  }
+  a#downloadLink {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #0073e6;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  a#downloadLink:hover {
+    text-decoration: underline;
+  }
+  button.copy-btn {
+    background: #00b050;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button.copy-btn:hover {
+    background: #007a2e;
+  }
+  .error {
+    color: #d9534f;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>Google Drive URL to Direct Download URL Converter</h2>
+<p style='text-align:center;'>Only allow to share the files and zip files. Just share your google drive file's link and make sure you have selected anyone can view option while sharing. </p>
+    <input type="text" id="inputUrl" placeholder="Paste Google Drive URL here" />
+    <button class="convert-btn" onclick="convertUrl()">Convert</button>
+
+    <div class="output-section" id="outputSection" style="display:none;">
+      <a href="#" target="_blank" id="downloadLink"></a><br />
+      <button class="copy-btn" onclick="copyToClipboard()">Copy to Clipboard</button>
+    </div>
+
+    <p id="errorMsg" class="error" style="display:none;"></p>
+  </div>
+
+<script>
+  function convertUrl() {
+    const url = document.getElementById('inputUrl').value.trim();
+    const regex = /\/d\/([a-zA-Z0-9_-]+)\//;
+    const match = url.match(regex);
+    const outputSection = document.getElementById('outputSection');
+    const downloadLink = document.getElementById('downloadLink');
+    const errorMsg = document.getElementById('errorMsg');
+
+    if (match && match[1]) {
+      const fileId = match[1];
+      const downloadUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+      downloadLink.href = downloadUrl;
+      downloadLink.textContent = downloadUrl;
+
+      outputSection.style.display = 'block';
+      errorMsg.style.display = 'none';
+    } else {
+      outputSection.style.display = 'none';
+      errorMsg.style.display = 'block';
+      errorMsg.textContent = 'Invalid Google Drive URL. Please try again.';
+    }
+  }
+
+  function copyToClipboard() {
+    const downloadLink = document.getElementById('downloadLink').textContent;
+    navigator.clipboard.writeText(downloadLink).then(() => {
+      alert('Copied to clipboard!');
+    }).catch(() => {
+      alert('Failed to copy. Please copy manually.');
+    });
+  }
+</script>
+</body>
+</html>
